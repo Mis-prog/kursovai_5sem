@@ -1,8 +1,9 @@
 #include "windows.h"
+#include <algorithm>
 #include "Method_MelderaNida.h"
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
-    Method_Main();
+    methodNelderaMida();
     return 0;
 }
