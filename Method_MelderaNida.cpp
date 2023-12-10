@@ -48,7 +48,8 @@ void methodNelderaMida() {
     VectorXd x0 = setInitial_x0(n);
     MatrixXd node_x = set_NodeFill(x0);
     print_node(node_x);
-    for(int i=0;i<10;i++){
+    VectorXd funk=node_x.col(n);
+    while(stopping(funk,n)){
         node_x = sort_Node(node_x, n);
         VectorXd x_central = get_CentralGravied(node_x, n);
         VectorXd x_big = node_x.row(n);
@@ -76,6 +77,7 @@ void methodNelderaMida() {
                 }
             }
         }
+        funk=node_x.col(n);
         print_node(node_x);
     }
 }
@@ -160,9 +162,9 @@ bool stopping(VectorXd &function, int n) {
     }
     sigma = sqrt(sigma / (n + 1));
     if (sigma < epsilon) {
-        return 1;
-    } else {
         return 0;
+    } else {
+        return 1;
     }
 }
 

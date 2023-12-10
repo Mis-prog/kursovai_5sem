@@ -9,7 +9,7 @@ const double len_a = 0.5;
 const double alfa = 1;
 const double gamma = 2;
 const double betta = 0.5;
-const double epsilon=0.001;
+const double epsilon=0.0001;
 
 double foo(VectorXd x);
 
