@@ -2,7 +2,7 @@
 #include "Method_MelderaNida.h"
 
 double foo(VectorXd x) {
-    return 2.8 * x(1) * x(1) + 1.9 * x(0) + 2.7 * x(0) * x(0) + 1.6 - 1.9 * x(1);
+    return x(0)*x(0)+x(0)*x(1)+x(1)*x(1)-6*x(0)-9*x(1);
 }
 
 void nodeFillCoef(const VectorXd &x0, int n, MatrixXd &node);
@@ -47,14 +47,14 @@ void methodNelderaMida() {
     int n = set_n();
     VectorXd x0 = setInitial_x0(n);
     MatrixXd node_x = set_NodeFill(x0);
-    while(1) {
+    print_node(node_x);
+    for(int i=0;i<10;i++){
         node_x = sort_Node(node_x, n);
         VectorXd x_central = get_CentralGravied(node_x, n);
         VectorXd x_big = node_x.row(n);
         VectorXd x_new = display(x_central, x_big);
         if (x_new(n) < x_big(n)) {
             node_x.row(n) = x_new.transpose();
-            x_central = get_CentralGravied(node_x, n);
             VectorXd x_stretching = stretching(x_central, x_new);
             if (x_stretching(n) < x_new(n)) {
                 node_x.row(n) = x_stretching.transpose();
@@ -62,10 +62,6 @@ void methodNelderaMida() {
             } else {
                 node_x = sort_Node(node_x, n);
             }
-            x_big.setZero();
-            x_new.setZero();
-            x_stretching.setZero();
-            x_central.setZero();
         } else {
             if (x_new(n) < node_x(n - 1, n)) {
                 node_x.row(n) = x_new.transpose();
@@ -79,9 +75,6 @@ void methodNelderaMida() {
                     node_x = reduction(node_x, n);
                 }
             }
-            x_big.setZero();
-            x_new.setZero();
-            x_central.setZero();
         }
         print_node(node_x);
     }
