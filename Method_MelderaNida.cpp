@@ -19,7 +19,7 @@ MatrixXd set_NodeFill(VectorXd x0) {
 void nodeFillCoef(const VectorXd &x0, int n, MatrixXd &node) {
     double a = ((sqrt(n + 1) - 1) / (n * sqrt(2))) * len_a;
     double b = ((sqrt(n + 1) + n - 1) / (n * sqrt(2))) * len_a;
-    cout << "a=" << a << " b=" << b << endl;
+//    cout << "a=" << a << " b=" << b << endl;
     for (int i = 0; i < n; i++) {
         VectorXd x_cur(n + 1);
         x_cur.setZero();
@@ -45,6 +45,10 @@ void methodNelderaMida() {
     MatrixXd node_x = set_NodeFill(x0);
     node_x = sort_Node(node_x, n);
     VectorXd x_central = get_CentralGravied(node_x, n);
+    cout << "Точки:\n"  << node_x << endl;
+    VectorXd x_big=node_x.row(n);
+    VectorXd x_new= display(x_central,x_big);
+    cout << endl << x_big.transpose()<< endl <<  x_central.transpose() << endl<< x_new.transpose();
 }
 
 int set_n() {
@@ -88,7 +92,7 @@ MatrixXd sort_Node(MatrixXd &node, int n) {
 
 VectorXd display(VectorXd &x_central, VectorXd &x_big) {
     VectorXd new_point=x_central + alfa * (x_central - x_big);
-    new_point(x_central.size())=foo(new_point);
+    new_point(x_central.size()-1)=foo(new_point);
     return new_point;
 }
 
