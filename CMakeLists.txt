@@ -7,4 +7,7 @@ include_directories(Eigen)
 
 add_executable(kr main.cpp
         Method_MelderaNida.cpp
-        Method_MelderaNida.h)
+        Method_MelderaNida.h
+        Method_NewtonAndGauss.cpp
+        Method_NewtonAndGauss.h
+)

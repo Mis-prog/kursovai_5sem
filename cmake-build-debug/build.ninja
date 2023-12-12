@@ -63,6 +63,13 @@ build CMakeFiles/kr.dir/Method_MelderaNida.cpp.obj: CXX_COMPILER__kr_unscanned_D
   OBJECT_DIR = CMakeFiles\kr.dir
   OBJECT_FILE_DIR = CMakeFiles\kr.dir
 
+build CMakeFiles/kr.dir/Method_NewtonAndGauss.cpp.obj: CXX_COMPILER__kr_unscanned_Debug D$:/5sem/kr/Method_NewtonAndGauss.cpp || cmake_object_order_depends_target_kr
+  DEP_FILE = CMakeFiles\kr.dir\Method_NewtonAndGauss.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -ID:/5sem/kr/Eigen
+  OBJECT_DIR = CMakeFiles\kr.dir
+  OBJECT_FILE_DIR = CMakeFiles\kr.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target kr
@@ -71,7 +78,7 @@ build CMakeFiles/kr.dir/Method_MelderaNida.cpp.obj: CXX_COMPILER__kr_unscanned_D
 #############################################
 # Link the executable kr.exe
 
-build kr.exe: CXX_EXECUTABLE_LINKER__kr_Debug CMakeFiles/kr.dir/main.cpp.obj CMakeFiles/kr.dir/Method_MelderaNida.cpp.obj
+build kr.exe: CXX_EXECUTABLE_LINKER__kr_Debug CMakeFiles/kr.dir/main.cpp.obj CMakeFiles/kr.dir/Method_MelderaNida.cpp.obj CMakeFiles/kr.dir/Method_NewtonAndGauss.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\kr.dir

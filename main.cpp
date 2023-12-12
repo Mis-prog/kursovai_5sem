@@ -1,9 +1,9 @@
 #include "windows.h"
-#include <algorithm>
 #include "Method_MelderaNida.h"
+#include "Method_NewtonAndGauss.h"
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
-    methodNelderaMida();
+    method_NewtonandGauss();
     return 0;
 }

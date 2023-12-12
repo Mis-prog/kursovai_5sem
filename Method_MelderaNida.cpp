@@ -1,8 +1,11 @@
 
 #include "Method_MelderaNida.h"
 
-double foo(VectorXd x) {
-    return x(0)*x(0)+x(0)*x(1)+x(1)*x(1)-6*x(0)-9*x(1);
+//double foo(VectorXd x) {
+//    return x(0)*x(0)+x(0)*x(1)+x(1)*x(1)-6*x(0)-9*x(1);
+//}
+double foo(VectorXd x){
+    return 0.5*(1-x(0))*(1-x(0))+0.5*(x(1)-x(0)*x(0))*(x(1)-x(0)*x(0));
 }
 
 void nodeFillCoef(const VectorXd &x0, int n, MatrixXd &node);

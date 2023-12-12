@@ -262,15 +262,15 @@ protected:
   * template function, e.g.:
   * \code
   * // in the .h:
-  * void foo(const Ref<MatrixXf>& A);
-  * void foo(const Ref<MatrixXf,0,Stride<> >& A);
+  * void foo_search(const Ref<MatrixXf>& A);
+  * void foo_search(const Ref<MatrixXf,0,Stride<> >& A);
   *
   * // in the .cpp:
   * template<typename TypeOfA> void foo_impl(const TypeOfA& A) {
   *     ... // crazy code goes here
   * }
-  * void foo(const Ref<MatrixXf>& A) { foo_impl(A); }
-  * void foo(const Ref<MatrixXf,0,Stride<> >& A) { foo_impl(A); }
+  * void foo_search(const Ref<MatrixXf>& A) { foo_impl(A); }
+  * void foo_search(const Ref<MatrixXf,0,Stride<> >& A) { foo_impl(A); }
   * \endcode
   *
   * See also the following stackoverflow questions for further references:

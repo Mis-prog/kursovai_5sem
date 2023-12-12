@@ -158,8 +158,8 @@ struct member_redux {
   * It is the return type of DenseBase::colwise() and DenseBase::rowwise()
   * and most of the time this is the only way it is explicitly used.
   *
-  * To understand the logic of rowwise/colwise expression, let's consider a generic case `A.colwise().foo()`
-  * where `foo` is any method of `VectorwiseOp`. This expression is equivalent to applying `foo()` to each
+  * To understand the logic of rowwise/colwise expression, let's consider a generic case `A.colwise().foo_search()`
+  * where `foo` is any method of `VectorwiseOp`. This expression is equivalent to applying `foo_search()` to each
   * column of `A` and then re-assemble the outputs in a matrix expression:
   * \code [A.col(0).foo(), A.col(1).foo(), ..., A.col(A.cols()-1).foo()] \endcode
   *
