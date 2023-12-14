@@ -3,64 +3,65 @@
 
 void print_point(VectorXd &x_i);
 
-VectorXd foo(VectorXd &x, VectorXd &b) {//y=f(x,a,b) y=b1*x/(b2+x)
-    VectorXd cur = x.array() + b[1];
-    VectorXd res = (b[0] * x.array()) / cur.array();
+double foo(VectorXd &b, VectorXd &ak, VectorXd &sk, MatrixXd &bk) {
+    double res = 0;
+    srand(time(0));
+    for (int i = 0; i < 4; i++) {
+        res += ak[i] * exp(static_cast<double>(-((b - bk.col(i)).norm() * (b - bk.col(i)).norm()) / sk[i]));
+    }
+    res += (rand() % 10) / 8.0;
     return res;
 }
 
+void print_node(const MatrixXd &node_x);
+
 void method_NewtonandGauss() {
-    VectorXd x = VectorXd::LinSpaced(50, 0, 5);
-    VectorXd b{{2, 3}};
-    VectorXd y = InitialPointY(x, b);
-    ofstream out1;
-    out1.open("Point.txt");
-    for (int i = 0; i < x.size(); i++) {
-        out1 << x[i] << " " << y[i] << endl;
-    }
-    out1.close();
-    VectorXd old(b.size()), _new(b.size());
-    old << 5, 1;
-    _new << 5, 1;
+    MatrixXd B(50, 3);
+    B.col(0) = VectorXd::LinSpaced(50, 1, 3);
+    B.col(1) = VectorXd::LinSpaced(50, 3, 5);
+    B.col(2) = VectorXd::LinSpaced(50, 2, 4);
+    VectorXd ak = VectorXd::Random(4);
+    VectorXd sk = VectorXd::Random(4);
+    MatrixXd bk = MatrixXd::Random(3, 4);
+    VectorXd y = InitialPointY(B, ak, sk, bk);
+    VectorXd old(3), _new(3);
+    old << 1, 1, 1;
+    _new << 1, 1, 1;
     for (int i = 0; i < maxIter; i++) {
         old = _new;
-        MatrixXd J = Jacobian(x, old);
-        VectorXd dy = y - foo(x, old);
+        MatrixXd J = Jacobian(B, ak, sk, bk);
+        VectorXd dy = y.array() - foo(old, ak, sk, bk);
         _new = old + (J.transpose() * J).inverse() * J.transpose() * dy;
         if ((old - _new).norm() < epsil) {
             break;
         }
     }
-    VectorXd y_res = foo(x, _new);
-    ofstream out2;
-    out2.open("Line.txt");
-    for (int i = 0; i < x.size(); i++) {
-        out2 << x[i] << " " << y_res[i] << endl;
-    }
-    out2.close();
-
 }
 
-VectorXd InitialPointY(VectorXd &x, VectorXd &b) {
-    srand(time(0));
-    VectorXd y = foo(x, b);
-    for (int i = 0; i < y.size(); i++) {
-        y[i] = y[i] + (rand() % 10) / 50.0;
+VectorXd InitialPointY(MatrixXd &B, VectorXd &ak, VectorXd &sk, MatrixXd &bk) {
+    VectorXd y(50);
+    for (int i = 0; i < 50; i++) {
+        VectorXd cur = B.row(i);
+        y(i) = foo(cur, ak, sk, bk);
     }
     return y;
 }
 
 
-MatrixXd Jacobian(VectorXd &x, VectorXd &b) {
-    MatrixXd Jacobian(x.size(), b.size());
+MatrixXd Jacobian(MatrixXd &b, VectorXd &ak, VectorXd &sk, MatrixXd &bk) {
+    MatrixXd Jacobian(b.rows(), b.cols());
     Jacobian.setZero();
-    VectorXd t(b.size());
-    for (int i = 0; i < b.size(); i++) {
-        t.setZero();
-        t[i] = t[i] + epsil;
-        VectorXd grad_a = b + t, grad_b = b - t;
-        VectorXd res = (foo(x, grad_a) - foo(x, grad_b)).array() / (2 * epsil);
-        Jacobian.col(i) = res;
+    VectorXd t(b.cols()), res_v(b.cols());
+    for (int i = 0; i < b.rows(); i++) {
+        res_v.setZero();
+        for (int j = 0; j < b.cols(); j++) {
+            t.setZero();
+            t[i] = t[i] + epsil;
+            VectorXd grad_a = b.row(i) + t, grad_b = b.row(i) - t;
+            double res = (foo(grad_a, ak, sk, bk) - foo(grad_b, ak, sk, bk)) / (2 * epsil);
+            res_v(j) = res;
+        }
+        Jacobian.row(i) = res_v.transpose();
     }
     return Jacobian;
 }

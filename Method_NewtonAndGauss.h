@@ -13,12 +13,12 @@ const int start = 0, _end = 5;
 const int n_x = 1, b_n = 2, n_indication = 50;
 
 
-VectorXd foo(VectorXd &x, VectorXd &b);
+double foo(VectorXd &b,VectorXd &ak,VectorXd &sk, MatrixXd &bk);
 
 void method_NewtonandGauss();
 
-VectorXd InitialPointY(VectorXd &x, VectorXd &b);
+VectorXd InitialPointY(MatrixXd &B,VectorXd &ak,VectorXd &sk, MatrixXd &bk);
 
-MatrixXd Jacobian(VectorXd &x, VectorXd &b);
+MatrixXd Jacobian(MatrixXd &b,VectorXd &ak,VectorXd &sk, MatrixXd &bk);
 
 void write_file(char *a);

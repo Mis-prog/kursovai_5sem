@@ -87,7 +87,7 @@ void methodNelderaMida() {
 
 void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.transpose() << endl; }
 
-void print_node(const MatrixXd &node_x) { cout << "Симплекс:\n" << node_x << endl; }
+void print_node(const MatrixXd &node_x) { cout << "Матрица:\n" << node_x << endl; }
 
 int set_n() {
     int n;
