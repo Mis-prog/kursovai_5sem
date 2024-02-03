@@ -1,13 +1,8 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.3)
 project(kr)
 
 set(CMAKE_CXX_STANDARD 17)
 
 include_directories(Eigen)
 
-add_executable(kr main.cpp
-        Method_MelderaNida.cpp
-        Method_MelderaNida.h
-        Method_NewtonAndGauss.cpp
-        Method_NewtonAndGauss.h
-)
+add_subdirectory(src)
