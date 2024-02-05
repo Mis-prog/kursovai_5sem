@@ -1,2 +1,0 @@
-
-add_library(_optimization_methods STATIC Method_MelderaNida.cpp Method_NewtonAndGauss.cpp)
