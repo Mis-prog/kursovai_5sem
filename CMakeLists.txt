@@ -5,9 +5,6 @@ project(kr
         LANGUAGES CXX
 )
 
-
-add_executable(project)
-
 add_subdirectory(src)
 
 add_subdirectory(example)
