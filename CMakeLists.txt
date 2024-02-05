@@ -1,8 +1,13 @@
-cmake_minimum_required(VERSION 3.3)
-project(kr)
+cmake_minimum_required(VERSION 3.8)
 
-set(CMAKE_CXX_STANDARD 17)
+project(kr
+        VERSION 0.0.2
+        LANGUAGES CXX
+)
 
-include_directories(Eigen)
+
+add_executable(project)
 
 add_subdirectory(src)
+
+add_subdirectory(example)
