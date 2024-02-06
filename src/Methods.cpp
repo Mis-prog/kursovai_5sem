@@ -15,7 +15,11 @@ void Function::set(double (*foo)(VectorXd &x)) {
     }
 }
 
-Function::Function(VectorXd &x, int size) : x0(x), size(size) {}
+Function::Function(VectorXd &x, int size) {
+    this->size = size;
+    this->x0 = x;
+    x0.conservativeResize(x.size() + 1);
+}
 
 Function::~Function() {
     x0.resize(0);
@@ -30,10 +34,10 @@ double Function::mnk(double (*foo)(VectorXd &), VectorXd &x) {
     return sum;
 }
 
-void Function::print() {
+void Function::print_result() {
     cout << "Начальные данные:\n";
-    cout << y << endl;
+    cout << y.transpose() << endl;
 
-    cout << "Параметры x";
-    cout << x0 << endl;
+    cout << "Параметры x\n";
+    cout << x0.transpose() << endl;
 }

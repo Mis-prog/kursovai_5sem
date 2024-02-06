@@ -17,7 +17,7 @@ public:
 
     double mnk(double (*foo)(VectorXd &x),VectorXd &x);
 
-    void print();
+    void print_result();
 
     void write_data_file(char *name);
 
