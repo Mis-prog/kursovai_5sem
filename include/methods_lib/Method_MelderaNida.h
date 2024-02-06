@@ -1,9 +1,5 @@
-#include <iostream>
 #include <algorithm>
-#include "../Eigen/Dense"
-
-using namespace std;
-using namespace Eigen;
+#include "Methods.h"
 
 const double len_a = 0.5;
 const double alfa = 1;
@@ -11,11 +7,13 @@ const double gamma = 2;
 const double betta = 0.5;
 const double epsilon=0.0001;
 
-double foo(VectorXd x);
+double foo(VectorXd &x);
 
-void methodNelderaMida();
+void method_Neldera_and_Mida(Function &function);
 
-MatrixXd set_NodeFill(VectorXd x0);
+MatrixXd set_node_fill(Function &function);
+
+void set_node_fill_coef(MatrixXd &node,Function &function);
 
 VectorXd get_CentralGravied(MatrixXd &node, int n);
 

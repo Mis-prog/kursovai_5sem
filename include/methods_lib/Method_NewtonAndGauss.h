@@ -2,7 +2,7 @@
 #include "../Eigen/Dense"
 #include <random>
 #include <ctime>
-#include <fstream>
+#include "Methods.h"
 
 using namespace std;
 using namespace Eigen;
