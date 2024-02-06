@@ -9,9 +9,15 @@ set_target_properties(
 )
 
 target_include_directories(
-        optimization_methods
+        example
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/../include/methods_lib
+)
+
+target_include_directories(
+        example
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../include/Eigen
 )
 
 target_link_libraries(example optimization_methods)

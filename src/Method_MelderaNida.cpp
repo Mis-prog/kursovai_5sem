@@ -1,26 +1,21 @@
-
 #include "../include/methods_lib/Method_MelderaNida.h"
 
-//double foo(VectorXd x) {
-//    return x(0)*x(0)+x(0)*x(1)+x(1)*x(1)-6*x(0)-9*x(1);
-//}
-
-double foo(VectorXd x){
-    return 0.5*(1-x(0))*(1-x(0))+0.5*(x(1)-x(0)*x(0))*(x(1)-x(0)*x(0));
+double foo(VectorXd &x) {
+    return 0.2 * exp(-(x[0] + x[1]) * (x[0] + x[1]) / 10.0);
 }
 
-void nodeFillCoef(const VectorXd &x0, int n, MatrixXd &node);
 
-MatrixXd set_NodeFill(VectorXd x0) {
-    int n = x0.size();
+MatrixXd set_node_fill(Function &function) {
+    int n = function.size;
     MatrixXd node(n, n);
     node.setZero();
-    node.row(0) = x0.transpose();
-    nodeFillCoef(x0, n - 1, node);
+    node.row(0) = function.x0.transpose();
+    set_node_fill_coef(node,function);
     return node;
 }
 
-void nodeFillCoef(const VectorXd &x0, int n, MatrixXd &node) {
+void set_node_fill_coef(MatrixXd &node, Function &function) {
+    int n = node.size() - 1;
     double a = ((sqrt(n + 1) - 1) / (n * sqrt(2))) * len_a;
     double b = ((sqrt(n + 1) + n - 1) / (n * sqrt(2))) * len_a;
 //    cout << "a=" << a << " b=" << b << endl;
@@ -29,31 +24,29 @@ void nodeFillCoef(const VectorXd &x0, int n, MatrixXd &node) {
         x_cur.setZero();
         for (int j = 0; j < n; j++) {
             if (i == j) {
-                x_cur(j) = x0(j) + a;
+                x_cur(j) = function.x0(j) + a;
             } else {
-                x_cur(j) = x0(j) + b;
+                x_cur(j) = function.x0(j) + b;
             }
         }
-        x_cur(n) = foo(x_cur);
+        x_cur(n) = function.mnk(foo,x_cur);
         node.row(i + 1) = x_cur.transpose();
     }
 }
 
-VectorXd setInitial_x0(int n);
-
-int set_n();
 
 void print_node(const MatrixXd &node_x);
 
 void print_point(VectorXd &x_central);
 
-void methodNelderaMida() {
-    int n = set_n();
-    VectorXd x0 = setInitial_x0(n);
-    MatrixXd node_x = set_NodeFill(x0);
+void method_Neldera_and_Mida(Function &function) {
+    int n = function.size;
+    MatrixXd node_x = set_node_fill(function);
+
     print_node(node_x);
-    VectorXd funk=node_x.col(n);
-    while(stopping(funk,n)){
+    VectorXd funk = node_x.col(n);
+
+    while (stopping(funk, n)) {
         node_x = sort_Node(node_x, n);
         VectorXd x_central = get_CentralGravied(node_x, n);
         VectorXd x_big = node_x.row(n);
@@ -81,7 +74,7 @@ void methodNelderaMida() {
                 }
             }
         }
-        funk=node_x.col(n);
+        funk = node_x.col(n);
         print_node(node_x);
     }
 }
@@ -90,12 +83,6 @@ void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.tra
 
 void print_node(const MatrixXd &node_x) { cout << "Симплекс:\n" << node_x << endl; }
 
-int set_n() {
-    int n;
-    cout << "Введите размерность пространства:";
-    cin >> n;
-    return n;
-}
 
 VectorXd get_CentralGravied(MatrixXd &node, int n) {
     VectorXd cent_grav(n + 1);
@@ -170,15 +157,4 @@ bool stopping(VectorXd &function, int n) {
     } else {
         return 1;
     }
-}
-
-VectorXd setInitial_x0(int n) {
-    VectorXd x0(n + 1);
-    x0.setZero();
-    cout << "Введите координаты начальной точки:";
-    for (int i = 0; i < n; i++) {
-        cin >> x0(i);
-    }
-    x0(n) = foo(x0);
-    return x0;
 }
