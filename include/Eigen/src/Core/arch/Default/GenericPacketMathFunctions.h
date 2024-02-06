@@ -1187,7 +1187,7 @@ struct accurate_log2<double> {
     // trans = c * (x-1)/(x+1);
     // itrans = (1+x/c)/(1-x/c);
     // interval=[trans(sqrt(0.5)); trans(sqrt(2))];
-    // print(interval);
+    // print_result(interval);
     // f = log2(itrans(x));
     // p=fpminimax(f,[|1,3,5,7,9,11,13,15,17|],[|1,DD,double...|],interval,relative,floating);
     const Packet q12 = pset1<Packet>(2.87074255468000586e-9);

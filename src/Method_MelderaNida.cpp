@@ -6,16 +6,16 @@ double foo(VectorXd &x) {
 
 
 MatrixXd set_node_fill(Function &function) {
-    int n = function.size;
+    int n = function.x0.size();
     MatrixXd node(n, n);
     node.setZero();
     node.row(0) = function.x0.transpose();
-    set_node_fill_coef(node,function);
+    set_node_fill_coef(node, function);
     return node;
 }
 
 void set_node_fill_coef(MatrixXd &node, Function &function) {
-    int n = node.size() - 1;
+    int n = function.x0.size() - 1;
     double a = ((sqrt(n + 1) - 1) / (n * sqrt(2))) * len_a;
     double b = ((sqrt(n + 1) + n - 1) / (n * sqrt(2))) * len_a;
 //    cout << "a=" << a << " b=" << b << endl;
@@ -29,7 +29,7 @@ void set_node_fill_coef(MatrixXd &node, Function &function) {
                 x_cur(j) = function.x0(j) + b;
             }
         }
-        x_cur(n) = function.mnk(foo,x_cur);
+        x_cur(n) = function.mnk(foo, x_cur);
         node.row(i + 1) = x_cur.transpose();
     }
 }
@@ -40,7 +40,7 @@ void print_node(const MatrixXd &node_x);
 void print_point(VectorXd &x_central);
 
 void method_Neldera_and_Mida(Function &function) {
-    int n = function.size;
+    int n = function.x0.size() - 1;
     MatrixXd node_x = set_node_fill(function);
 
     print_node(node_x);
@@ -77,6 +77,9 @@ void method_Neldera_and_Mida(Function &function) {
         funk = node_x.col(n);
         print_node(node_x);
     }
+    node_x = sort_Node(node_x, n);
+    funk = node_x.row(1);
+    function.x0 = funk;
 }
 
 void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.transpose() << endl; }
