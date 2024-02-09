@@ -1,90 +1,54 @@
 #include "../include/methods_lib/Method_NewtonAndGauss.h"
 
 
-void print_point(VectorXd &x_i);
+void method_Newton_and_Gauss(Function &function) {
+    int count = function.x0.size();
+    VectorXd old(count);
 
-//
-//VectorXd foo(VectorXd &x, VectorXd &b) {//y=f(x,a,b) y=b1*x/(b2+x)
-//    VectorXd cur = x.array() + b[1];
-//    VectorXd res = (b[0] * x.array()) / cur.array();
-//    return res;
-//}
-
-//void method_Newton_and_Gauss(double (*foo)(VectorXd &x), Function &function){
-//    VectorXd x = VectorXd::LinSpaced(50, 0, 5);
-//    VectorXd b{{2, 3}};
-//    VectorXd y = InitialPointY(x, b);
-//    ofstream out1;
-//    out1.open("Point.txt");
-//    for (int i = 0; i < x.size(); i++) {
-//        out1 << x[i] << " " << y[i] << endl;
-//    }
-//    out1.close();
-//    VectorXd old(b.size()), _new(b.size());
-//    old << 5, 1;
-//    _new << 5, 1;
-//    for (int i = 0; i < maxIter; i++) {
-//        old = _new;
-//        MatrixXd J = Jacobian(x, old);
-//        VectorXd dy = y - foo(x, old);
-//        _new = old + (J.transpose() * J).inverse() * J.transpose() * dy;
-//        if ((old - _new).norm() < epsil) {
-//            break;
-//        }
-//    }
-//    VectorXd y_res = foo(x, _new);
-//    ofstream out2;
-//    out2.open("Line.txt");
-//    for (int i = 0; i < x.size(); i++) {
-//        out2 << x[i] << " " << y_res[i] << endl;
-//    }
-//    out2.close();
-//}
-
-//VectorXd InitialPointY(VectorXd &x, VectorXd &b) {
-//    srand(time(0));
-//    VectorXd y = foo(x, b);
-//    for (int i = 0; i < y.size(); i++) {
-//        y[i] = y[i] + (rand() % 10) / 50.0;
-//    }
-//    return y;
-//}
-
-
-MatrixXd Jacobian(double (*foo)(VectorXd &x),Function &function) {
-    MatrixXd Jacobian(function.size,function.x0.size());
-    Jacobian.setZero();
-
-    VectorXd res(function.size), dx(function.size);
-    res.setZero();dx.setZero();
-
-    for (int i = 0; i < function.x0.size(); i++) {
-        for (int j = 0; j < function.size; j++){
-//            Jacobian(j,i)=
+    for (int i = 0; i < max_iter; i++) {
+        old = function.x0;
+        MatrixXd J = Jacobian(function);
+        VectorXd dy = calculation_r(function);
+        function.x0 = old - (J.transpose() * J).inverse() * J.transpose() * dy;
+        if ((old - function.x0).norm() < function.epsilon) {
+            function.count_iter = i;
+            break;
         }
-//        t.setZero();
-//        t[i] = t[i] + epsil;
-//        VectorXd grad_a = b + t, grad_b = b - t;
-//        VectorXd res = (foo(x, grad_a) - foo(x, grad_b)).array() / (2 * epsil);
-//        Jacobian.col(i) = res;
+//        cout << function.x0.transpose() << endl;
     }
-    return Jacobian;
 }
-
-//void write_file(char *a) {
-//    ofstream out;
-//    out.open(a);
-//    out.close();
-//}
 
 
 MatrixXd Jacobian(Function &function) {
-    MatrixXd Jacobian(function.size,function.x0.size());
+    int row = function.size, col = function.x0.size();
+
+    MatrixXd Jacobian(row, col);
     Jacobian.setZero();
 
-    VectorXd res(function.size), dx(function.size);
-    res.setZero();dx.setZero();
 
+    VectorXd dx(col);
+    VectorXd grad_l(col), grad_r(col);
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            dx.setZero();
+            dx[j] = _dx;
 
+            grad_l = function.x0 + dx;
+            grad_r = function.x0 - dx;
 
+            Jacobian(i, j) = (-function.foo_list[i](grad_l) + function.foo_list[i](grad_r)) / (2 * function.epsilon);
+        }
+    }
+
+    return Jacobian;
+}
+
+VectorXd calculation_r(Function &function) {
+    int col = function.size;
+    VectorXd r(col);
+
+    for (int j = 0; j < col; j++) {
+        r[j] = function.y[j] - function.foo_list[j](function.x0);
+    }
+    return r;
 }

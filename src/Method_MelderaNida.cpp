@@ -42,7 +42,6 @@ void method_Neldera_and_Mida(Function &function) {
     int n = function.x0.size() - 1;
     MatrixXd node_x = set_node_fill(function);
 
-    print_node(node_x);
     VectorXd funk = node_x.col(n);
 
     while (stopping(funk, n, function)) {
@@ -74,11 +73,12 @@ void method_Neldera_and_Mida(Function &function) {
             }
         }
         funk = node_x.col(n);
-        print_node(node_x);
+        function.count_iter++;
     }
     node_x = sort_node(node_x, n);
     funk = node_x.row(1);
     function.x0 = funk;
+    function.x0.conservativeResize(function.x0.size() - 1);
 }
 
 void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.transpose() << endl; }

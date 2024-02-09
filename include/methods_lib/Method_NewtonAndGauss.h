@@ -1,11 +1,13 @@
-#include "../Eigen/Dense"
-#include <random>
-#include <ctime>
 #include "Methods.h"
 
 using namespace std;
 using namespace Eigen;
 
-//void method_Newton_and_Gauss(double (*foo)(VectorXd &x), Function &function);
+const int max_iter = 300;
+const double _dx = 0.1;
+
+void method_Newton_and_Gauss(Function &function);
 
 MatrixXd Jacobian(Function &function);
+
+VectorXd calculation_r(Function &function);
