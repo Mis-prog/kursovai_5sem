@@ -1,11 +1,9 @@
-#include <algorithm>
 #include "Methods.h"
 
 const double len_a = 0.5;
 const double alfa = 1;
 const double gamma = 2;
 const double betta = 0.5;
-const double epsilon=0.0001;
 
 
 void method_Neldera_and_Mida(Function &function);

@@ -6,14 +6,6 @@ void Function::write_data_file(char *name) {
     data_file.open(name, std::ios::out);
     data_file.close();
 }
-//
-//void Function::set(double (*foo)(VectorXd &x)) {
-//    srand(time(NULL));
-//    y.resize(size);
-//    for (int i = 0; i < size; i++) {
-//        y(i) = foo(x0) + rand() % 10;
-//    }
-//}
 
 Function::Function(VectorXd &x, int size) {
     this->size = size;
@@ -44,11 +36,21 @@ void Function::print_result() {
 void Function::set(vector<function<double(VectorXd &)>> &foo_list) {
     srand(time(NULL));
 
-    this->foo_list=foo_list;
+    this->foo_list = foo_list;
     y.resize(size);
     VectorXd x_0(2);
-    x_0 << 0,0;
+    x_0 << 0, 0;
     for (int i = 0; i < size; i++) {
         y[i] = foo_list[i](x_0);
     }
+}
+
+int Function::getCountIter() const {
+    cout << "count_iter: " << count_iter << endl;
+    return count_iter;
+}
+
+const VectorXd &Function::getX() const {
+    cout << "Parametr: " << x0.transpose() << endl;
+    return x0;
 }
