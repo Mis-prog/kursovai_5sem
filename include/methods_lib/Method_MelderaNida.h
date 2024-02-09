@@ -1,3 +1,4 @@
+#pragma once
 #include "Function.h"
 
 const double len_a = 0.5;

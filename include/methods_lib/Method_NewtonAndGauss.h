@@ -1,3 +1,6 @@
+#pragma once
+#include "Function.h"
+
 using namespace std;
 using namespace Eigen;
 
