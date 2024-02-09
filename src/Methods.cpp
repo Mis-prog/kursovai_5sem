@@ -6,19 +6,18 @@ void Function::write_data_file(char *name) {
     data_file.open(name, std::ios::out);
     data_file.close();
 }
-
-void Function::set(double (*foo)(VectorXd &x)) {
-    srand(time(NULL));
-    y.resize(size);
-    for (int i = 0; i < size; i++) {
-        y(i) = foo(x0) + rand() % 10;
-    }
-}
+//
+//void Function::set(double (*foo)(VectorXd &x)) {
+//    srand(time(NULL));
+//    y.resize(size);
+//    for (int i = 0; i < size; i++) {
+//        y(i) = foo(x0) + rand() % 10;
+//    }
+//}
 
 Function::Function(VectorXd &x, int size) {
     this->size = size;
     this->x0 = x;
-    x0.conservativeResize(x.size() + 1);
 }
 
 Function::~Function() {
@@ -26,10 +25,10 @@ Function::~Function() {
     y.resize(0);
 }
 
-double Function::mnk(double (*foo)(VectorXd &), VectorXd &x) {
+double Function::mnk(VectorXd &x) {
     double sum = 0;
     for (int i = 0; i < size; i++) {
-        sum += (y[i] - foo(x)) * (y[i] - foo(x));
+        sum += (y[i] - foo_list[i](x)) * (y[i] - foo_list[i](x));
     }
     return sum;
 }
@@ -40,4 +39,16 @@ void Function::print_result() {
 
     cout << "Параметры x\n";
     cout << x0.transpose() << endl;
+}
+
+void Function::set(vector<function<double(VectorXd &)>> &foo_list) {
+    srand(time(NULL));
+
+    this->foo_list=foo_list;
+    y.resize(size);
+    VectorXd x_0(2);
+    x_0 << 0,0;
+    for (int i = 0; i < size; i++) {
+        y[i] = foo_list[i](x_0);
+    }
 }
