@@ -1,4 +1,4 @@
-#include "../include/methods_lib/Methods.h"
+#include "../include/methods_lib/Function.h"
 
 
 void Function::write_data_file(char *name) {

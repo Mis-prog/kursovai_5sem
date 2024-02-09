@@ -1,4 +1,4 @@
-#include "../include/methods_lib/Method_NewtonAndGauss.h"
+#include "../include/methods_lib/Methods.h"
 
 
 void method_Newton_and_Gauss(Function &function) {

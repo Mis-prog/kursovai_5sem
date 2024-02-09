@@ -1,4 +1,4 @@
-#include "Methods.h"
+#include "Function.h"
 
 const double len_a = 0.5;
 const double alfa = 1;

@@ -1,5 +1,3 @@
-#include "Methods.h"
-
 using namespace std;
 using namespace Eigen;
 

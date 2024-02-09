@@ -1,4 +1,4 @@
-#include "../include/methods_lib/Method_MelderaNida.h"
+#include "../include/methods_lib/Methods.h"
 
 
 MatrixXd set_node_fill(Function &function) {
