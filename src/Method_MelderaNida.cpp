@@ -1,12 +1,9 @@
 #include "../include/methods_lib/Method_MelderaNida.h"
 
-double foo(VectorXd &x) {
-    return 0.2 * exp(-(x[0] + x[1]) * (x[0] + x[1]) / 10.0);
-}
-
 
 MatrixXd set_node_fill(Function &function) {
     int n = function.x0.size();
+
     MatrixXd node(n, n);
     node.setZero();
     node.row(0) = function.x0.transpose();
@@ -29,7 +26,7 @@ void set_node_fill_coef(MatrixXd &node, Function &function) {
                 x_cur(j) = function.x0(j) + b;
             }
         }
-        x_cur(n) = function.mnk(foo, x_cur);
+        x_cur(n) = function.mnk(x_cur);
         node.row(i + 1) = x_cur.transpose();
     }
 }
@@ -40,44 +37,46 @@ void print_node(const MatrixXd &node_x);
 void print_point(VectorXd &x_central);
 
 void method_Neldera_and_Mida(Function &function) {
+    function.x0.conservativeResize(function.x0.size() + 1);
+
     int n = function.x0.size() - 1;
     MatrixXd node_x = set_node_fill(function);
 
     print_node(node_x);
     VectorXd funk = node_x.col(n);
 
-    while (stopping(funk, n)) {
-        node_x = sort_Node(node_x, n);
-        VectorXd x_central = get_CentralGravied(node_x, n);
+    while (stopping(funk, n, function)) {
+        node_x = sort_node(node_x, n);
+        VectorXd x_central = get_central_gravied(node_x, n, function);
         VectorXd x_big = node_x.row(n);
-        VectorXd x_new = display(x_central, x_big);
+        VectorXd x_new = display(x_central, x_big, function);
         if (x_new(n) < x_big(n)) {
             node_x.row(n) = x_new.transpose();
-            VectorXd x_stretching = stretching(x_central, x_new);
+            VectorXd x_stretching = stretching(x_central, x_new, function);
             if (x_stretching(n) < x_new(n)) {
                 node_x.row(n) = x_stretching.transpose();
-                node_x = sort_Node(node_x, n);
+                node_x = sort_node(node_x, n);
             } else {
-                node_x = sort_Node(node_x, n);
+                node_x = sort_node(node_x, n);
             }
         } else {
             if (x_new(n) < node_x(n - 1, n)) {
                 node_x.row(n) = x_new.transpose();
-                node_x = sort_Node(node_x, n);
+                node_x = sort_node(node_x, n);
             } else {
-                VectorXd x_compression = сompression(x_central, x_big);
+                VectorXd x_compression = сompression(x_central, x_big, function);
                 if (x_compression(n) < x_big(n)) {
                     node_x.row(n) = x_compression.transpose();
-                    node_x = sort_Node(node_x, n);
+                    node_x = sort_node(node_x, n);
                 } else {
-                    node_x = reduction(node_x, n);
+                    node_x = reduction(node_x, n, function);
                 }
             }
         }
         funk = node_x.col(n);
         print_node(node_x);
     }
-    node_x = sort_Node(node_x, n);
+    node_x = sort_node(node_x, n);
     funk = node_x.row(1);
     function.x0 = funk;
 }
@@ -87,7 +86,7 @@ void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.tra
 void print_node(const MatrixXd &node_x) { cout << "Матрица:\n" << node_x << endl; }
 
 
-VectorXd get_CentralGravied(MatrixXd &node, int n) {
+VectorXd get_central_gravied(MatrixXd &node, int n, Function &function) {
     VectorXd cent_grav(n + 1);
     cent_grav.setZero();
     for (int i = 0; i < n; i++) {
@@ -96,11 +95,11 @@ VectorXd get_CentralGravied(MatrixXd &node, int n) {
         }
         cent_grav(i) = cent_grav(i) / n;
     }
-    cent_grav(n) = foo(cent_grav);
+    cent_grav(n) = function.mnk(cent_grav);
     return cent_grav;
 }
 
-MatrixXd sort_Node(MatrixXd &node, int n) {
+MatrixXd sort_node(MatrixXd &node, int n) {
     int sortingRow = n;
     VectorXi indices(node.rows());
     for (int i = 0; i < node.rows(); ++i) {
@@ -119,43 +118,43 @@ MatrixXd sort_Node(MatrixXd &node, int n) {
     return sortedMatrix;
 }
 
-VectorXd display(VectorXd &x_central, VectorXd &x_big) {
+VectorXd display(VectorXd &x_central, VectorXd &x_big, Function &function) {
     VectorXd new_point = x_central + alfa * (x_central - x_big);
-    new_point(x_central.size() - 1) = foo(new_point);
+    new_point(x_central.size() - 1) = function.mnk(new_point);
     return new_point;
 }
 
-VectorXd stretching(VectorXd &x_central, VectorXd &x_display) {
+VectorXd stretching(VectorXd &x_central, VectorXd &x_display, Function &function) {
     VectorXd new_point = x_central + gamma * (x_display - x_central);
-    new_point(x_central.size() - 1) = foo(new_point);
+    new_point(x_central.size() - 1) = function.mnk(new_point);
     return new_point;
 }
 
-VectorXd сompression(VectorXd &x_central, VectorXd &x_big) {
+VectorXd сompression(VectorXd &x_central, VectorXd &x_big, Function &function) {
     VectorXd new_point = x_central + betta * (x_big - x_central);
-    new_point(x_central.size() - 1) = foo(new_point);
+    new_point(x_central.size() - 1) = function.mnk(new_point);
     return new_point;
 }
 
-MatrixXd reduction(MatrixXd &node, int n) {
+MatrixXd reduction(MatrixXd &node, int n, Function &function) {
     MatrixXd new_node(n + 1, n + 1);
     new_node.setZero();
     for (int i = 0; i <= n; i++) {
         new_node.row(i) = node.row(i) + 0.5 * (node.row(i) - node.row(0));
         VectorXd new_point = new_node.row(i);
-        new_node(i, n) = foo(new_point);
+        new_node(i, n) = function.mnk(new_point);
     }
     return new_node;
 }
 
-bool stopping(VectorXd &function, int n) {
-    double value_foo = function.sum() / (n + 1);
+bool stopping(VectorXd &x, int n, Function &function) {
+    double value_foo = x.sum() / (n + 1);
     double sigma = 0;
     for (int i = 0; i <= n; i++) {
-        sigma = (function(i) - value_foo);
+        sigma = (x(i) - value_foo);
     }
     sigma = sqrt(sigma / (n + 1));
-    if (sigma < epsilon) {
+    if (sigma < function.epsilon) {
         return 0;
     } else {
         return 1;
