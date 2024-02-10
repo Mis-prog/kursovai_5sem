@@ -2,6 +2,8 @@
 
 
 void method_Newton_and_Gauss(Function &function) {
+    clock_t start = clock();
+
     int count = function.x0.size();
     VectorXd old(count);
 
@@ -14,8 +16,10 @@ void method_Newton_and_Gauss(Function &function) {
             function.count_iter = i;
             break;
         }
-//        cout << function.x0.transpose() << endl;
     }
+
+    clock_t end = clock();
+    function._time = (double)(end - start)/CLOCKS_PER_SEC;
 }
 
 

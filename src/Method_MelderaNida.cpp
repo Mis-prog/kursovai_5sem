@@ -37,6 +37,8 @@ void print_node(const MatrixXd &node_x);
 void print_point(VectorXd &x_central);
 
 void method_Neldera_and_Mida(Function &function) {
+    clock_t start = clock();
+
     function.x0.conservativeResize(function.x0.size() + 1);
 
     int n = function.x0.size() - 1;
@@ -79,6 +81,9 @@ void method_Neldera_and_Mida(Function &function) {
     funk = node_x.row(1);
     function.x0 = funk;
     function.x0.conservativeResize(function.x0.size() - 1);
+
+    clock_t end = clock();
+    function._time = double(end - start) / CLOCKS_PER_SEC;
 }
 
 void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.transpose() << endl; }

@@ -54,3 +54,8 @@ const VectorXd &Function::getX() const {
     cout << "Parametr: " << x0.transpose() << endl;
     return x0;
 }
+
+double Function::getTime() const {
+    cout << setprecision(10) << "time: " << _time << endl;
+    return _time;
+}
