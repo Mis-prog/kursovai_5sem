@@ -40,11 +40,12 @@ MatrixXd Jacobian(Function &function) {
             grad_l = function.x0 + dx;
             grad_r = function.x0 - dx;
 
-            Jacobian(i, j) = (-function.foo_list[i](grad_l) + function.foo_list[i](grad_r)) / (2 * function.epsilon);
+            Jacobian(i, j) = (-function.foo_list[i](grad_l) + function.foo_list[i](grad_r)) / (2 * _dx);
         }
     }
 
     return Jacobian;
+
 }
 
 VectorXd calculation_r(Function &function) {
