@@ -8,3 +8,7 @@ project(kr
 add_subdirectory(src)
 
 add_subdirectory(example)
+
+add_subdirectory(googletest)
+
+add_subdirectory(test)
