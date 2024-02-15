@@ -19,7 +19,7 @@ void method_Newton_and_Gauss(Function &function) {
     }
 
     clock_t end = clock();
-    function._time = (double)(end - start)/CLOCKS_PER_SEC;
+    function._time += (double) (end - start) / CLOCKS_PER_SEC;
 }
 
 
@@ -32,6 +32,8 @@ MatrixXd Jacobian(Function &function) {
 
     VectorXd dx(col);
     VectorXd grad_l(col), grad_r(col);
+
+    VectorXd y_l, y_r;
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
             dx.setZero();
@@ -40,7 +42,10 @@ MatrixXd Jacobian(Function &function) {
             grad_l = function.res + dx;
             grad_r = function.res - dx;
 
-            Jacobian(i, j) = (-function.foo_list[i](grad_l) + function.foo_list[i](grad_r)) / (2 * _dx);
+            function.rbf.getValues(grad_l, y_l);
+            function.rbf.getValues(grad_r, y_r);
+
+            Jacobian(i, j) = (-y_l[i] + y_r[i]) / (2 * _dx);
         }
     }
 
@@ -52,8 +57,10 @@ VectorXd calculation_r(Function &function) {
     int col = function.size;
     VectorXd r(col);
 
-    for (int j = 0; j < col; j++) {
-        r[j] = function.y[j] - function.foo_list[j](function.res);
-    }
+    VectorXd current_res;
+    function.rbf.getValues(function.res, current_res);
+
+
+    r = function.y - current_res;
     return r;
 }

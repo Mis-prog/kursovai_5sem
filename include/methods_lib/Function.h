@@ -9,6 +9,7 @@
 #include <functional>
 #include <iomanip>
 #include <chrono>
+#include "../data/rbfreader.h"
 
 using namespace Eigen;
 using namespace std;
@@ -16,18 +17,18 @@ using namespace std;
 
 class Function {
 public:
+    RBF rbf;
     double _time = 0.0;
     int count_iter = 0;
     const double epsilon = 1e-3;
-    vector<function<double(VectorXd &)>> foo_list;
     VectorXd x0, y, res;
-    int size;
-    int count_step;
-    bool on_hybrid=0;
+    int size = 0;
+    int count_step = 0;
+    bool on_hybrid = 0;
 
-    Function(VectorXd &x, int size);
+    Function(VectorXd &x);
 
-    void set(vector<function<double(VectorXd &)>> &foo_list, VectorXd &y);
+    void set(RBF &rbf, VectorXd &y);
 
     double mnk(VectorXd &x);
 

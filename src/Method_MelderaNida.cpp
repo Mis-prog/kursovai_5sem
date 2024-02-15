@@ -90,7 +90,7 @@ void method_Neldera_and_Mida(Function &function) {
     function.res=funk;
 
     clock_t end = clock();
-    function._time = double(end - start) / CLOCKS_PER_SEC;
+    function._time += ((double)(end - start) / CLOCKS_PER_SEC);
 }
 
 void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.transpose() << endl; }

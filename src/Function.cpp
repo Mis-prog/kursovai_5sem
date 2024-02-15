@@ -9,10 +9,9 @@ void Function::write_data_file(char *name) {
     data_file.close();
 }
 
-Function::Function(VectorXd &x, int size) {
-    this->size = size;
+Function::Function(VectorXd &x) {
     this->x0 = x;
-    res.resize(size);
+    res.resize(x.size());
     res = x;
 }
 
@@ -23,31 +22,27 @@ Function::~Function() {
 
 double Function::mnk(VectorXd &x) {
     double sum = 0;
-    for (int i = 0; i < size; i++) {
-        sum += (y[i] - foo_list[i](x)) * (y[i] - foo_list[i](x));
+    VectorXd current_res(y.size());
+    rbf.getValues(x, current_res);
+    for (int i = 0; i < y.size(); i++) {
+        sum += (y[i] - current_res[i]) * (y[i] - current_res[i]);
     }
     return sum;
 }
 
 void Function::print_result() {
     cout << "Начальные данные:\n";
-    cout << y.transpose() << endl;
+    cout << x0.transpose() << endl;
 
     cout << "Параметры x\n";
-    cout << x0.transpose() << endl;
+    cout << res.transpose() << endl;
 }
 
-void Function::set(vector<function<double(VectorXd &)>> &foo_list, VectorXd &y) {
-    srand(time(NULL));
-
-    this->foo_list = foo_list;
-    y.resize(size);
+void Function::set(RBF &rbf, VectorXd &y) {
+    this->rbf = rbf;
+    size = y.size();
+    this->y.resize(size);
     this->y = y;
-//    VectorXd x_0(2);
-//    x_0 << 0, 0;
-//    for (int i = 0; i < size; i++) {
-//        y[i] = foo_list[i](x_0);
-//    }
 }
 
 int Function::getCountIter() const {
