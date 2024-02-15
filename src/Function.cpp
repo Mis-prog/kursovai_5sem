@@ -1,4 +1,6 @@
 #include "../include/methods_lib/Function.h"
+#include "Method_MelderaNida.h"
+#include "Method_NewtonAndGauss.h"
 
 
 void Function::write_data_file(char *name) {
@@ -10,6 +12,8 @@ void Function::write_data_file(char *name) {
 Function::Function(VectorXd &x, int size) {
     this->size = size;
     this->x0 = x;
+    res.resize(size);
+    res = x;
 }
 
 Function::~Function() {
@@ -33,16 +37,17 @@ void Function::print_result() {
     cout << x0.transpose() << endl;
 }
 
-void Function::set(vector<function<double(VectorXd &)>> &foo_list) {
+void Function::set(vector<function<double(VectorXd &)>> &foo_list, VectorXd &y) {
     srand(time(NULL));
 
     this->foo_list = foo_list;
     y.resize(size);
-    VectorXd x_0(2);
-    x_0 << 0, 0;
-    for (int i = 0; i < size; i++) {
-        y[i] = foo_list[i](x_0);
-    }
+    this->y = y;
+//    VectorXd x_0(2);
+//    x_0 << 0, 0;
+//    for (int i = 0; i < size; i++) {
+//        y[i] = foo_list[i](x_0);
+//    }
 }
 
 int Function::getCountIter() const {
@@ -51,11 +56,18 @@ int Function::getCountIter() const {
 }
 
 const VectorXd &Function::getX() const {
-    cout << "Parametr: " << x0.transpose() << endl;
-    return x0;
+    cout << "Parametr: " << res.transpose() << endl;
+    return res;
 }
 
 double Function::getTime() const {
     cout << setprecision(10) << "time: " << _time << endl;
     return _time;
+}
+
+void Function::hybrid_mode(int count_iter) {
+    this->count_step = count_iter;
+    this->on_hybrid = true;
+    method_Neldera_and_Mida(*this);
+    method_Newton_and_Gauss(*this);
 }

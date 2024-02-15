@@ -76,11 +76,18 @@ void method_Neldera_and_Mida(Function &function) {
         }
         funk = node_x.col(n);
         function.count_iter++;
+
+        if (function.count_iter>function.count_step && function.on_hybrid){
+            break;
+        }
+
+
     }
     node_x = sort_node(node_x, n);
-    funk = node_x.row(1);
-    function.x0 = funk;
-    function.x0.conservativeResize(function.x0.size() - 1);
+    funk = node_x.row(0);
+    funk.conservativeResize(funk.size() - 1);
+
+    function.res=funk;
 
     clock_t end = clock();
     function._time = double(end - start) / CLOCKS_PER_SEC;

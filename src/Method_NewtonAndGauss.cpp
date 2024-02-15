@@ -8,12 +8,12 @@ void method_Newton_and_Gauss(Function &function) {
     VectorXd old(count);
 
     for (int i = 0; i < max_iter; i++) {
-        old = function.x0;
+        old = function.res;
         MatrixXd J = Jacobian(function);
         VectorXd dy = calculation_r(function);
-        function.x0 = old - (J.transpose() * J).inverse() * J.transpose() * dy;
-        if ((old - function.x0).norm() < function.epsilon) {
-            function.count_iter = i;
+        function.res = old - (J.transpose() * J).inverse() * J.transpose() * dy;
+        if ((old - function.res).norm() < function.epsilon) {
+            function.count_iter += i;
             break;
         }
     }
@@ -24,7 +24,7 @@ void method_Newton_and_Gauss(Function &function) {
 
 
 MatrixXd Jacobian(Function &function) {
-    int row = function.size, col = function.x0.size();
+    int row = function.size, col = function.res.size();
 
     MatrixXd Jacobian(row, col);
     Jacobian.setZero();
@@ -37,8 +37,8 @@ MatrixXd Jacobian(Function &function) {
             dx.setZero();
             dx[j] = _dx;
 
-            grad_l = function.x0 + dx;
-            grad_r = function.x0 - dx;
+            grad_l = function.res + dx;
+            grad_r = function.res - dx;
 
             Jacobian(i, j) = (-function.foo_list[i](grad_l) + function.foo_list[i](grad_r)) / (2 * _dx);
         }
@@ -53,7 +53,7 @@ VectorXd calculation_r(Function &function) {
     VectorXd r(col);
 
     for (int j = 0; j < col; j++) {
-        r[j] = function.y[j] - function.foo_list[j](function.x0);
+        r[j] = function.y[j] - function.foo_list[j](function.res);
     }
     return r;
 }
