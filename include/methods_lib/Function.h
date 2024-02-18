@@ -20,7 +20,7 @@ public:
     RBF rbf;
     double _time = 0.0;
     int count_iter = 0;
-    const double epsilon = 1e-3;
+    const double epsilon = 1e-2;
     VectorXd x0, y, res;
     int size = 0;
     int count_step = 0;
