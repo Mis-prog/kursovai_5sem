@@ -26,6 +26,7 @@ void method_Newton_and_Gauss(Function &function) {
             break;
         }
 
+
         file << function.count_iter << " " << function.mnk(function.res) << endl;
     }
 
@@ -55,10 +56,11 @@ MatrixXd Jacobian(Function &function) {
             grad_l = function.res + dx;
             grad_r = function.res - dx;
 
+
             function.rbf.getValues(grad_l, y_l);
             function.rbf.getValues(grad_r, y_r);
 
-            Jacobian(i, j) = (-y_l[i] + y_r[i]) / (2 * _dx);
+            Jacobian(i, j) = (-y_l[i] + y_r[i]) / (double)(2 * _dx);
         }
     }
 
