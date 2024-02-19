@@ -25,7 +25,7 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
 
     VectorXd x0(2);
-    x0 << 1, 2;
+    x0 << -1, 1;
 
     vector<function<double(VectorXd &)>> foo_list;
 

@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 add_executable(example main.cpp)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../plot/plot.py ${CMAKE_CURRENT_BINARY_DIR}/plot.py)
+
 set_target_properties(
         example PROPERTIES
         CXX_STANDARD 17
