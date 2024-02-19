@@ -1,4 +1,5 @@
 #include "../include/methods_lib/Methods.h"
+#include <fstream>
 
 
 MatrixXd set_node_fill(Function &function) {
@@ -37,6 +38,15 @@ void print_node(const MatrixXd &node_x);
 void print_point(VectorXd &x_central);
 
 void method_Neldera_and_Mida(Function &function) {
+    ofstream file;
+
+    if (function.on_hybrid) {
+        file.open("Hybrid.txt", ios_base::app);
+    } else {
+        function.count_iter = 0;
+        file.open("Neldera_And_Mida.txt");
+    }
+
     clock_t start = clock();
 
     function.x0.conservativeResize(function.x0.size() + 1);
@@ -45,6 +55,7 @@ void method_Neldera_and_Mida(Function &function) {
     MatrixXd node_x = set_node_fill(function);
 
     VectorXd funk = node_x.col(n);
+
 
     while (stopping(funk, n, function)) {
         node_x = sort_node(node_x, n);
@@ -74,23 +85,27 @@ void method_Neldera_and_Mida(Function &function) {
                 }
             }
         }
-        funk = node_x.col(n);
-        function.count_iter++;
 
-        if (function.count_iter>function.count_step && function.on_hybrid){
+        file << function.count_iter << " " << funk(n) << endl;
+
+        funk = node_x.col(n);
+        function.count_iter += 1;
+
+        if (function.count_iter > function.count_step && function.on_hybrid) {
             break;
         }
-
-
     }
+
+    file.close();
+
     node_x = sort_node(node_x, n);
     funk = node_x.row(0);
     funk.conservativeResize(funk.size() - 1);
 
-    function.res=funk;
+    function.res = funk;
 
     clock_t end = clock();
-    function._time += ((double)(end - start) / CLOCKS_PER_SEC);
+    function._time += ((double) (end - start) / CLOCKS_PER_SEC);
 }
 
 void print_point(VectorXd &x_central) { cout << "Точка:\n" << x_central.transpose() << endl; }

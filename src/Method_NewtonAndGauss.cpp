@@ -2,6 +2,14 @@
 
 
 void method_Newton_and_Gauss(Function &function) {
+    ofstream file;
+
+
+    if (function.on_hybrid) {
+        file.open("Hybrid.txt");
+    } else {
+        file.open("Newton_And_Gauss.txt");
+    }
     clock_t start = clock();
 
     int count = function.x0.size();
@@ -12,11 +20,16 @@ void method_Newton_and_Gauss(Function &function) {
         MatrixXd J = Jacobian(function);
         VectorXd dy = calculation_r(function);
         function.res = old - (J.transpose() * J).inverse() * J.transpose() * dy;
+
+        function.count_iter += 1;
         if ((old - function.res).norm() < function.epsilon) {
-            function.count_iter += i;
             break;
         }
+
+        file << function.count_iter << " " << function.mnk(function.res) << endl;
     }
+
+    file.close();
 
     clock_t end = clock();
     function._time += (double) (end - start) / CLOCKS_PER_SEC;

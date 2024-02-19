@@ -13,7 +13,7 @@ int main() {
 
     cout << "\nНелдера Мида\n";
     VectorXd x(3);
-    x << 10, 12, 1.2;
+    x << 10.2, 12.2, 2;
 
     Function function1(x);
     function1.set(rbf, y);
@@ -36,7 +36,7 @@ int main() {
 
     Function function3(x);
     function3.set(rbf, y);
-    function3.hybrid_mode();
+    function3.hybrid_mode(10);
     function3.getX();
     function3.getCountIter();
     function3.getTime();
